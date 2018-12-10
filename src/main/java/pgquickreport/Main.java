@@ -21,9 +21,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -52,7 +54,8 @@ public class Main {
 
                     for (String arg : args) {
                         if (new File(arg).exists()) {
-                            qr.process(con, new File(arg));
+                            String title = getTitle(arg);
+                            qr.process(con, title, new File(arg));
                         } else {
                             System.out.printf("O arquivo %s não existe.", arg);
                         }
@@ -71,5 +74,34 @@ public class Main {
             System.out.println("Informe um arquivo de consulta (.sql)");
             System.out.println("Ex.:java -jar pgquickreport.jar arquivo1.sql [arquivo2.sql] [arquivoN.sql]");
         }
+    }
+
+    /**
+     * Retorna o título da consulta.
+     *
+     * @param queryFileName Arquivo que contém a consulta.
+     *
+     * @return Título do relatório.
+     */
+    private static String getTitle(String queryFileName) throws IOException {
+        String title = queryFileName;
+        List<String> lines = Files.readAllLines(new File(queryFileName).toPath());
+
+        for (int l = 0; l < lines.size(); ++l) {
+            String line = lines.get(l);
+
+            if (line.startsWith("/**")) {
+                for (int l2 = l + 1; l2 < lines.size(); ++l2) {
+                    line = lines.get(l2);
+                    if (line.startsWith(" * ")) {
+                        title = line.substring(3);
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+
+        return title;
     }
 }

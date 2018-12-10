@@ -50,24 +50,26 @@ public class PGQuickReport {
      * Gera um relatório no formato QuickReport, do PGAdmin III.
      *
      * @param con             Conexão utilizada.
+     * @param title           Título do relatório.
      * @param consultFileName Nome do arquivo de consulta.
      *
      * @return Nome do arquivo de relatório.
      */
-    public String process(Connection con, String consultFileName) {
+    public String process(Connection con, String title, String consultFileName) {
 
-        return process(con, new File(consultFileName));
+        return process(con, title, new File(consultFileName));
     }
 
     /**
      * Gera um relatório no formato QuickReport, do PGAdmin III.
      *
      * @param con         Conexão utilizada.
+     * @param title       Título do relatório.
      * @param consultFile Arquivo de consulta.
      *
      * @return Nome do arquivo de relatório.
      */
-    public String process(Connection con, File consultFile) {
+    public String process(Connection con, String title, File consultFile) {
         String reportName = changeExtension(consultFile, "html");
 
         try {
@@ -95,8 +97,6 @@ public class PGQuickReport {
             }
 
             String url = con.getMetaData().getURL();
-
-            String title = "Título";
             String generated = new SimpleDateFormat("E d MMM Y hh:mm:ss Z").format(new Date());
             String database = url.split("/")[3];
             String user = con.getMetaData().getUserName();
