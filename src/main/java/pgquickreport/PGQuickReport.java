@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2017 Carlos Romel Pereira da Silva, carlos.romel@gmail.com
+ * Copyright (C) 2017, 2023 Carlos Romel Pereira da Silva, carlos.romel@gmail.com
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,6 +19,7 @@ package pgquickreport;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.Connection;
@@ -36,15 +37,15 @@ import java.util.Date;
 public class PGQuickReport {
 
     private static final String COLUMN_HEADER_MODEL
-                                = "%n"
-                                  + "                        <th class=\"ReportTableHeaderCell\" width=\"2,857142857142857%%\">%s</th>";
+            = "%n"
+            + "                        <th class=\"ReportTableHeaderCell\" width=\"2,857142857142857%%\">%s</th>";
     private static final String COLUMN_MODEL
-                                = "                        <td class=\"ReportTableValueCell\">%s</td>\n";
+            = "                        <td class=\"ReportTableValueCell\">%s</td>\n";
     private static final String ROW_MODEL
-                                = ""
-                                  + "<tr class=\"%s\">\n"
-                                  + "%s"
-                                  + "                    </tr>%n                    ";
+            = ""
+            + "<tr class=\"%s\">\n"
+            + "%s"
+            + "                    </tr>%n                    ";
 
     /**
      * Gera um relatório no formato QuickReport, do PGAdmin III.
@@ -129,8 +130,10 @@ public class PGQuickReport {
     }
 
     private String getFileContent(String consultFile) throws IOException {
+        String path = "/" + consultFile;
+        InputStream content = getClass().getResourceAsStream(path);
 
-        return getFileContent(new File(consultFile));
+        return new String(content.readAllBytes());
     }
 
     /**

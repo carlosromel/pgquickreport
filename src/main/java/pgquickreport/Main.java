@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2017 Carlos Romel Pereira da Silva, carlos.romel@gmail.com
+ * Copyright (C) 2017, 2023 Carlos Romel Pereira da Silva, carlos.romel@gmail.com
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,6 +22,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -85,7 +86,8 @@ public class Main {
      */
     private static String getTitle(String queryFileName) throws IOException {
         String title = queryFileName;
-        List<String> lines = Files.readAllLines(new File(queryFileName).toPath());
+        Path queryFIle = new File(queryFileName).toPath();
+        List<String> lines = Files.readAllLines(queryFIle);
 
         for (int l = 0; l < lines.size(); ++l) {
             String line = lines.get(l);
